@@ -7,12 +7,15 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/rbbalestrin/lembrancas-api/internal/database"
+	"github.com/rbbalestrin/lembrancas-api/internal/handlers"
+	"github.com/rbbalestrin/lembrancas-api/internal/services"
+	"gorm.io/gorm"
 )
 
 type application struct {
 	config config
-	//logger
-	//db driver
+	db     *gorm.DB
 }
 
 // mount
@@ -27,8 +30,28 @@ func (app *application) mount() http.Handler {
 
 	r.Use(middleware.Timeout(60 * time.Second))
 
+	// Health check
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("não tao no teto... ta suave."))
+	})
+
+	// Initialize services and handlers
+	habitService := services.NewHabitService(app.db)
+	habitHandler := handlers.NewHabitHandler(habitService)
+
+	// API routes
+	r.Route("/api", func(r chi.Router) {
+		r.Route("/habits", func(r chi.Router) {
+			r.Post("/", habitHandler.CreateHabit)
+			r.Get("/", habitHandler.GetAllHabits)
+			r.Get("/{id}", habitHandler.GetHabit)
+			r.Put("/{id}", habitHandler.UpdateHabit)
+			r.Delete("/{id}", habitHandler.DeleteHabit)
+			r.Post("/{id}/complete", habitHandler.MarkComplete)
+			r.Delete("/{id}/complete/{date}", habitHandler.UnmarkComplete)
+			r.Get("/{id}/statistics", habitHandler.GetStatistics)
+			r.Get("/{id}/completions", habitHandler.GetCompletions)
+		})
 	})
 
 	return r

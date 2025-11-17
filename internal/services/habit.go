@@ -152,11 +152,16 @@ func (s *HabitService) GetStatistics(habitID uuid.UUID) (*Statistics, error) {
 		return stats, nil
 	}
 
-	// Extract dates and sort
+	// Extract dates (completions come in DESC order, we need ASC for streak calculation)
 	dates := make([]time.Time, len(completions))
 	for i, c := range completions {
 		dates[i] = time.Date(c.CompletedAt.Year(), c.CompletedAt.Month(), c.CompletedAt.Day(), 0, 0, 0, 0, c.CompletedAt.Location())
 		stats.Completions = append(stats.Completions, dates[i])
+	}
+	
+	// Reverse dates to get chronological order (oldest first) for streak calculation
+	for i, j := 0, len(dates)-1; i < j; i, j = i+1, j-1 {
+		dates[i], dates[j] = dates[j], dates[i]
 	}
 
 	// Calculate streaks
