@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/rbbalestrin/lembrancas-api/internal/database"
 	"github.com/rbbalestrin/lembrancas-api/internal/handlers"
 	"github.com/rbbalestrin/lembrancas-api/internal/services"
 	"gorm.io/gorm"
