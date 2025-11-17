@@ -3,8 +3,8 @@ package database
 import (
 	"log/slog"
 
+	"github.com/glebarez/sqlite"
 	"github.com/rbbalestrin/lembrancas-api/internal/models"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
