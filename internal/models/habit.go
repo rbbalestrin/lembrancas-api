@@ -11,18 +11,18 @@ import (
 type Frequency string
 
 const (
-	FrequencyDaily   Frequency = "daily"
-	FrequencyWeekly  Frequency = "weekly"
+	FrequencyDaily  Frequency = "daily"
+	FrequencyWeekly Frequency = "weekly"
 	FrequencyCustom Frequency = "custom"
 )
 
 // Habit represents a habit in the system
 type Habit struct {
-	ID          uuid.UUID         `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	ID          uuid.UUID         `json:"id" gorm:"type:text;primaryKey"`
 	Name        string            `json:"name" gorm:"not null"`
 	Description string            `json:"description"`
-	Frequency   Frequency         `json:"frequency" gorm:"type:varchar(20);not null;default:'daily'"`
-	Color       string            `json:"color" gorm:"type:varchar(7);not null;default:'#3B82F6'"`
+	Frequency   Frequency         `json:"frequency" gorm:"type:varchar(20);not null;default:daily"`
+	Color       string            `json:"color" gorm:"type:varchar(7);not null;default:#3B82F6"`
 	Category    string            `json:"category"`
 	CreatedAt   time.Time         `json:"created_at"`
 	UpdatedAt   time.Time         `json:"updated_at"`
@@ -39,8 +39,8 @@ func (h *Habit) BeforeCreate(tx *gorm.DB) error {
 
 // HabitCompletion represents a completion record for a habit
 type HabitCompletion struct {
-	ID          uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	HabitID     uuid.UUID `json:"habit_id" gorm:"type:uuid;not null;index"`
+	ID          uuid.UUID `json:"id" gorm:"type:text;primaryKey"`
+	HabitID     uuid.UUID `json:"habit_id" gorm:"type:text;not null;index"`
 	CompletedAt time.Time `json:"completed_at" gorm:"not null;index"`
 	Notes       string    `json:"notes"`
 	CreatedAt   time.Time `json:"created_at"`
@@ -53,4 +53,3 @@ func (hc *HabitCompletion) BeforeCreate(tx *gorm.DB) error {
 	}
 	return nil
 }
-
