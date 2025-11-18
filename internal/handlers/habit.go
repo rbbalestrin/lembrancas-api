@@ -5,11 +5,12 @@ import (
 	"net/http"
 	"time"
 
+	"log/slog"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 	"github.com/rbbalestrin/lembrancas-api/internal/models"
 	"github.com/rbbalestrin/lembrancas-api/internal/services"
-	"log/slog"
 )
 
 type HabitHandler struct {
@@ -22,11 +23,11 @@ func NewHabitHandler(service *services.HabitService) *HabitHandler {
 
 // CreateHabitRequest represents the request body for creating a habit
 type CreateHabitRequest struct {
-	Name        string            `json:"name" validate:"required"`
-	Description string            `json:"description"`
-	Frequency   models.Frequency  `json:"frequency"`
-	Color       string            `json:"color"`
-	Category    string            `json:"category"`
+	Name        string           `json:"name" validate:"required"`
+	Description string           `json:"description"`
+	Frequency   models.Frequency `json:"frequency"`
+	Color       string           `json:"color"`
+	Category    string           `json:"category"`
 }
 
 // UpdateHabitRequest represents the request body for updating a habit
@@ -181,7 +182,7 @@ func (h *HabitHandler) MarkComplete(w http.ResponseWriter, r *http.Request) {
 
 	var req CompleteHabitRequest
 	date := time.Now()
-	
+
 	// Try to decode request body, but if empty, use today's date
 	json.NewDecoder(r.Body).Decode(&req)
 	if req.Date != "" {
@@ -291,4 +292,3 @@ func respondJSON(w http.ResponseWriter, status int, data interface{}) {
 func respondError(w http.ResponseWriter, status int, message string) {
 	respondJSON(w, status, map[string]string{"error": message})
 }
-

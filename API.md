@@ -236,3 +236,4 @@ Todas as respostas de erro seguem o formato:
 - `"error": "name is required"` - Nome é obrigatório
 - `"error": "habit already completed for this date"` - Hábito já foi marcado como completo nesse dia
 
+
